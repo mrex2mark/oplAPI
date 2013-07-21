@@ -1,0 +1,719 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<!--
+
+	oplAPI_test.html -- Copyright 2013 One Plus Love, Inc.
+
+	Test page to call the oplAPI.php page.
+
+	deleteDBTableRecord
+	getDBTableRecord
+	getDBTableStructure
+	getSPList
+	getSQLList
+	insertDBTableRecord
+	logMessage
+	updateDBTableRecord
+
+-->
+<HTML>
+<HEAD>
+	<TITLE>OPL REST API Testing</TITLE>
+	<META http-equiv = "Content-Type" content = "text/html; charset=iso-8859-1" >
+
+	<script src = "scripts/global.js" type = "text/javascript" ></script>
+	<script src = "scripts/jquery.js" type = "text/javascript" ></script>
+	<script src = "scripts/main.js" type = "text/javascript" ></script>
+	<script src = "scripts/calldb.js" type = "text/javascript" ></script>
+	<script src = "scripts/calldbtesting.js" type = "text/javascript" ></script>
+
+<style>
+
+.hideNow, .returnValues {
+	display:none;
+}
+
+.returnToggle {
+	 cursor: pointer;
+	 background: #E5E5E5;
+	 border: 1px solid #919090;
+	 padding: 5px;
+	 margin: 10px;
+}
+
+a:link {
+	color:	blue;
+}
+
+a:visited {
+	color: 	blue;
+}
+
+a:hover {
+	color:	red;
+}
+
+</style>
+
+<script type = "text/javascript" >
+//
+// document.ready -- initialize the document
+//
+$( document ).ready( function() {
+	var debug	= false;
+
+	if ( debug ) {
+		alert( "In ready()" );
+	}
+
+		// Show the URLs used
+
+	if ( debug ) {
+		alert( "API_URL = [" + API_URL + "]" );
+	}
+	$( "#oplAPIURL" ).html( API_URL );
+
+		// Add show/hide click function
+
+	$( '.returnToggle' ).click( function() {
+
+		var curID = $( this ).parent().attr( 'id' );
+
+		$( '#' + curID + ' .returnToggle' ).toggle();
+
+		$( '#' + curID + ' .returnValues' ).toggle();
+
+	});
+	if ( debug ) {
+		alert( "Done ready()" );
+	}
+
+});
+</script>
+
+</HEAD>
+<BODY vLink = "#999999"
+		link = "#003399"
+		bgColor = "#FAA9F9"
+		><a name = "top" ></a>
+
+<h1>OPL API Testing Page</h1>
+This page tests jQuery/AJAX calls to the <b>oplAPI.php</b> database access page.  It uses
+the <b>callDB</b> Javascript interface.
+<p />
+
+Sending Events to: <b><span id = "oplAPIURL" ></span></b>
+</br>
+<input type = "checkbox" id = "verbose" >Turn on verbose communications
+<p />
+
+	<!--
+
+		*********************************************************
+
+		oplAPI call results
+
+		*********************************************************
+
+	-->
+
+<hr>
+
+<h2>Commands</h2>
+<ul>
+
+	<li><a href = "#deleteDBTableRecord" >deleteDBTableRecord</a></li>
+	<li><a href = "#getDBTableList" >getDBTableList</a></li>
+	<li><a href = "#getDBTableNames" >getDBTableNames</a></li>
+	<li><a href = "#getDBTableRecord" >getDBTableRecord</a></li>
+	<li><a href = "#getDBTableStructure" >getDBTableStructure</a></li>
+	<li><a href = "#getSPList" >getSPList</a></li>
+	<li><a href = "#getSQLList" >getSQLList</a></li>
+	<li><a href = "#insertDBTableRecord" >insertDBTableRecord</a></li>
+	<li><a href = "#logMessage" >logMessage</a></li>
+	<li><a href = "#updateDBTableRecord" >updateDBTableRecord</a></li>
+	<p />
+
+</ul>
+
+<hr>
+
+<h2>Tests</h2>
+
+	<!--
+
+		deleteDBTableRecord
+
+	-->
+
+
+<a name = "deleteDBTableRecord" ></a><h3>Delete Record (command = deleteDBTableRecord):</h3>
+
+This will delete a record from a table with the given ID.
+<p />
+
+<font color = "red">*</font>Table Name: <input type = "text" id = "dr_TableName" value = "" >
+<p />
+
+<font color = "red">*</font>ID: <input type = "text" id = "dr_ID" value = "" >
+<p />
+
+<input type = "button" value = "Submit" onclick = "javascript: deleteDBTableRecord();" >
+
+<p />
+
+<h4>Results</h4>
+<div id = "deleteDBTableRecordResults" >
+</div>
+
+<h4>Possible Return Values</h4>
+<div id = "deleteDBTableRecordRetVal">
+<span class = "returnToggle">Show</span><span class = "returnToggle hideNow">Hide</span>
+<div class = "returnValues">
+<br />
+Success<br />
+<ul>
+	<li>results : success -- always present
+	<li>success : Record was deleted
+</ul>
+Errors<br />
+<ul>
+	<li>results : error -- always present
+	<li>error -- contains one of the following error messages:
+	<ul>
+		<li>RecordID parameter missing or empty
+		<li>RecordID is not a number
+		<li>RecordID is not a valid id
+		<li>RecordID not found in DB
+	</ul>
+	</li>
+</ul>
+
+	</div>
+
+</div>
+<br />
+<a href = "#top" >Back to top</a>
+<hr>
+
+
+	<!--
+
+		getDBTableList
+
+	-->
+
+
+<a name = "getDBTableList" ></a><h3>Get all records in a table (command = getDBTableList):</h3>
+
+This will return all the records in a table as a list of values
+<p />
+
+<font color = "red" >* </font>Table Name: <input type = "text" id = "gdtl_TableName" value = "" >
+<br />
+Where Clause: <input type = "text" id = "gdtl_WhereClause" value = "" style = "width: 400px;" >
+<p />
+
+
+<input type = "button" value = "Submit" onclick = "javascript: getDBTableList();" >
+
+<p />
+
+<h4>Results</h4>
+<div id = "getDBTableListResults" >
+</div>
+
+<h4>Possible Return Values</h4>
+<div id = "getDBTableListRetVal">
+	<span class = "returnToggle">Show</span><span class = "returnToggle hideNow">Hide</span>
+	<div class = "returnValues">
+		<br />
+		Success<br />
+		<ul>
+			<li>results : success -- always present
+			<li>Values -- an object with the properties for this user:
+		</ul>
+		Errors<br />
+		<ul>
+			<li>results : error -- always present
+			<li>error -- contains one of the following error messages:
+			</li>
+		</ul>
+	</div>
+</div>
+<br />
+
+<a href = "#top" >Back to top</a>
+<hr>
+
+
+	<!--
+
+		getDBTableNames
+
+	-->
+
+
+<a name = "getDBTableNames" ></a><h3>Get Field Names for a Table (command = getDBTableNames):</h3>
+
+This will return a list of the field names for a table, and the required fields and their error messages
+as a list
+<p />
+
+Table Name: <input type = "text" id = "gdtn_TableName" value = "" >
+<p />
+
+<input type = "button" value = "Submit" onclick = "javascript: getDBTableNames();" >
+
+<p />
+
+<h4>Results</h4>
+<div id = "getDBTableNamesResults" >
+</div>
+
+<h4>Possible Return Values</h4>
+<div id = "getDBTableNamesRetVal">
+<span class = "returnToggle">Show</span><span class = "returnToggle hideNow">Hide</span>
+<div class = "returnValues">
+<br />
+Success<br />
+<ul>
+	<li>results : success -- always present
+	<li>chunk : ChunkName
+	<li>value : ChunkValue
+	<ul>
+
+	</ul>
+</ul>
+Errors<br />
+<ul>
+	<li>results : error -- always present
+	<li>error -- contains one of the following error messages:
+	<ul>
+		<li>ChunkName parameter missing or empty
+		<li>Chunk is missing.
+
+	</ul>
+	</li>
+</ul>
+
+	</div>
+
+</div>
+<br />
+
+<a href = "#top" >Back to top</a>
+<hr>
+
+
+
+	<!--
+
+		getDBTableRecord
+
+	-->
+
+
+<a name = "getDBTableRecord" ></a><h3>Get a record from a table (command = getDBTableRecord):</h3>
+
+This will return the record as a set of key/value pairs.
+<p />
+
+Table Name: <input type = "text" id = "gdtr_TableName" value = "" >
+<br />
+Record ID: <input type = "text" id = "gdtr_ID" value = "" >
+<p />
+
+<input type = "button" value = "Submit" onclick = "javascript: getDBTableRecord();" >
+
+<p />
+
+<h4>Results</h4>
+<div id = "getDBTableRecordResults" >
+</div>
+
+<h4>Possible Return Values</h4>
+<div id = "getDBTableRecordGetRetVal">
+<span class = "returnToggle">Show</span><span class = "returnToggle hideNow">Hide</span>
+<div class = "returnValues">
+<br />
+Success<br />
+<ul>
+	<li>results : success -- always present
+	<li>chunk : ChunkName
+	<li>value : ChunkValue
+	<ul>
+
+	</ul>
+</ul>
+Errors<br />
+<ul>
+	<li>results : error -- always present
+	<li>error -- contains one of the following error messages:
+	<ul>
+		<li>ChunkName parameter missing or empty
+		<li>Chunk is missing.
+
+	</ul>
+	</li>
+</ul>
+
+	</div>
+
+</div>
+<br />
+
+<a href = "#top" >Back to top</a>
+<hr>
+
+
+
+	<!--
+
+		getDBTableStructure
+
+	-->
+
+
+<a name = "getDBTableStructure" ></a><h3>Get Table Structure (command = getDBTableStructure):</h3>
+
+This will return a list of the Fields and their properties for a table in the database.
+<p />
+
+Table Name: <input type = "text" id = "gts_TableName" value = "" >
+<p />
+
+<input type = "button" value = "Submit" onclick = "javascript: getDBTableStructure();" >
+
+<p />
+
+<h4>Results</h4>
+<div id = "getDBTableStructureResults" >
+</div>
+
+<h4>Possible Return Values</h4>
+<div id = "getDBTableStructureRetVal">
+<span class = "returnToggle">Show</span><span class = "returnToggle hideNow">Hide</span>
+<div class = "returnValues">
+<br />
+Success<br />
+<ul>
+	<li>results : success -- always present
+	<li>Values -- an object with the fields and properties for this table:
+	<ul>
+		<li>???
+	</ul>
+</ul>
+Errors<br />
+<ul>
+	<li>results : error -- always present
+	<li>error -- contains one of the following error messages:
+	<ul>
+		<li>TableName empty
+		<li>Can't read table in database
+		<li>Exception caught
+	</ul>
+	</li>
+</ul>
+
+	</div>
+
+</div>
+<br />
+
+<a href = "#top" >Back to top</a>
+<hr>
+
+
+	<!--
+
+		getSPList
+
+	-->
+
+
+<a name = "getSPList" ></a><h3>Get SP List  (command = getSPList):</h3>
+
+This will return a list of result rows returned by running a stored procedure
+<p />
+
+Stored Procedure: <input type = "text" id = "gspl_StoredProcedure" value = "" >
+<br />
+
+Parameters (one per line, with an optional type parameter following an equals sign.  Type parameters are 'numeric',
+'boolean', and 'string'.  Use 'string' for dates.) <br>
+<textarea id = "gspl_keyValuePairs" cols = "20" rows = "6"></textarea>
+<p />
+
+<input type = "button" value = "Submit" onclick = "javascript: getSPList();" >
+
+<p />
+
+<h4>Results</h4>
+<div id = "getSPListResults" >
+</div>
+
+<h4>Possible Return Values</h4>
+<div id = "suitabilityGetRetVal">
+<span class = "returnToggle">Show</span><span class = "returnToggle hideNow">Hide</span>
+<div class = "returnValues">
+<br />
+Success<br />
+<ul>
+	<li>results : success -- always present
+	<li>Values -- an object with the properties for this user:
+</ul>
+Errors<br />
+<ul>
+	<li>results : error -- always present
+	<li>error -- contains one of the following error messages:
+	<ul>
+		<li>SPListID parameter missing or empty
+		<li>SPListID is not a number
+		<li>SPListID is not a valid id
+		<li>Can't load this SPList from the DB
+	</ul>
+	</li>
+</ul>
+
+	</div>
+
+</div>
+<br />
+
+<a href = "#top" >Back to top</a>
+<hr>
+
+
+	<!--
+
+		getSQLList
+
+	-->
+
+
+<a name = "getSQLList" ></a><h3>Get SQL List  (command = getSQLList):</h3>
+
+This will return a list of result rows returned by running an SQL command
+<p />
+
+SQL Command:
+<br>
+<textarea id = "gsqll_SQL" cols = "20" rows = "6"></textarea>
+<p />
+
+<input type = "button" value = "Submit" onclick = "javascript: getSQLList();" >
+
+<p />
+
+<h4>Results</h4>
+<div id = "getSQLListResults" >
+</div>
+
+<h4>Possible Return Values</h4>
+<div id = "suitabilityGetRetVal">
+<span class = "returnToggle">Show</span><span class = "returnToggle hideNow">Hide</span>
+<div class = "returnValues">
+<br />
+Success<br />
+<ul>
+	<li>results : success -- always present
+	<li>Values -- an object with the properties for this user:
+</ul>
+Errors<br />
+<ul>
+	<li>results : error -- always present
+	<li>error -- contains one of the following error messages:
+	<ul>
+		<li>SQLListID parameter missing or empty
+		<li>SQLListID is not a number
+		<li>SQLListID is not a valid id
+		<li>Can't load this SQLList from the DB
+	</ul>
+	</li>
+</ul>
+
+	</div>
+
+</div>
+<br />
+
+<a href = "#top" >Back to top</a>
+<hr>
+
+
+	<!--
+
+		insertDBTableRecord
+
+	-->
+
+<a name = "insertDBTableRecord" ></a><h3>Insert Record (command = insertDBTableRecord):</h3>
+
+This will a record into a table in the database.
+</br>
+<p />
+
+<font color = "red">*</font>Table Name: <input type = "text" id = "ir_TableName" value = "" >
+<p />
+
+Key/Value Pairs (Key=Value) <br>
+<textarea id = "ir_keyValuePairs" cols = "20" rows = "6"></textarea>
+<p />
+
+<input type = "button" value = "Submit" onclick = "javascript: insertDBTableRecord();" >
+
+<p />
+
+<h4>Results</h4>
+<div id = "insertDBTableRecordResults" >
+</div>
+
+<h4>Possible Return Values</h4>
+<div id = "insertDBTableRecordRetVal">
+<span class = "returnToggle">Show</span><span class = "returnToggle hideNow">Hide</span>
+<div class = "returnValues">
+<br />
+Success<br />
+<ul>
+	<li>results : success -- always present
+</ul>
+Errors<br />
+<ul>
+	<li>results : error -- always present
+	<li>error -- contains one of the following error messages:
+	<ul>
+		<li>???
+	</ul>
+	</li>
+</ul>
+
+	</div>
+
+</div>
+<br />
+
+<a href = "#top" >Back to top</a>
+<hr>
+
+
+
+	<!--
+
+		logMessage
+
+	-->
+
+
+<a name = "logMessage" ></a><h3>Log Message (command = logMessage):</h3>
+
+Enters a message in logs
+<p />
+
+Message: <input type = "text" id = "lm_Message" value = "" >
+<br />
+Tabstop: <input type = "text" id = "lm_Tabstop" value = "" >
+<p />
+
+<input type = "button" value = "Submit" onclick = "javascript: logMessage();" >
+
+<p />
+
+<h4>Results</h4>
+<div id = "logMessageResults" >
+</div>
+
+<h4>Possible Return Values</h4>
+<div id = "logMessageRetVals">
+	<span class = "returnToggle">Show</span><span class = "returnToggle hideNow">Hide</span>
+	<div class = "returnValues">
+		<br />
+		Success<br />
+		<ul>
+			<li>results : success -- this command never returns an error.  It will enter an empty message if
+			anything goes wrong
+		</ul>
+	</div>
+
+</div>
+<br />
+
+<a href = "#top" >Back to top</a>
+<hr>
+
+
+
+	<!--
+
+		updateDBTableRecord
+
+	-->
+
+
+<a name = "updateDBTableRecord" ></a><h3>Update DB Table Record (command = updateDBTableRecord):</h3>
+
+This will update a record in a table by id.
+<p />
+
+<font color = "red">*</font>Table Name: <input type = "text" id = "udtr_TableName" value = "" >
+<p />
+
+<font color = "red">*</font>ID: <input type = "text" id = "udtr_ID" value = "" >
+<p />
+
+Key/Value Pairs (Key=Value) <br>
+<textarea id = "udtr_keyValuePairs" cols = "20" rows = "6"></textarea>
+<p />
+
+<input type = "button" value = "Submit" onclick = "javascript: updateDBTableRecord();" >
+
+<p />
+
+<h4>Results</h4>
+<div id = "updateDBTableRecordResults" >
+</div>
+
+<h4>Possible Return Values</h4>
+<div id = "updateDBTableRecordRetVal">
+<span class = "returnToggle">Show</span><span class = "returnToggle hideNow">Hide</span>
+<div class = "returnValues">
+<br />
+Success<br />
+<ul>
+	<li>results : success -- always present
+	<li>Values -- an object with the properties for this ipaddress:
+	<ul>
+		<li>ID -- ID of the ipaddress
+		<li>DateAdded -- Date the record was created
+		<li>DateChanged -- Date the recored was changed
+		<li>UserID
+		<li>IPAddress
+		<li>Verified
+	</ul>
+</ul>
+Errors<br />
+<ul>
+	<li>results : error -- always present
+	<li>error -- contains one of the following error messages:
+	<ul>
+		<li>UserID parameter missing or empty
+		<li>UserID is not a number
+		<li>UserID is not a valid id
+		<li>IPAddress parameter missing or empty
+		<li>Can't load this User from DB
+		<li>No fields are different from DB
+		<li>Can't update this User in DB
+	</ul>
+	</li>
+</ul>
+
+	</div>
+
+</div>
+<br />
+
+<a href = "#top" >Back to top</a>
+<hr>
+
+
+</BODY>
+</HTML>
